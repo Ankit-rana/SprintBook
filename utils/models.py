@@ -15,6 +15,7 @@ class SprintBook(Base):
    id = Column(Integer, primary_key = True )
    name = Column(String(40)) 
    user = Column(String(21))
+   description = Column(String(80))
    
 
 class Sprint(Base):

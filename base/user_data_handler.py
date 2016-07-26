@@ -1,26 +1,34 @@
 from flask import request
-from flask_restful import Resource
-from pymongo import MongoClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from utils.models import Base, SprintBook 
+
+engine = create_engine('sqlite:///puppies.db')
+Base.metadata.bind = engine
+
+DBSession = sessionmaker(bind=engine)
+session = DBSession()
 
 
-
-class UserDataHandler(Resource):
-
-    def __init__(self):
-        self.client = MongoClient('localhost',27017)
-        self.db = self.client.sprintbook
-
+class UserDataHandler():
+'''This class is maintained to put data in sprintbook table or get the data from the database for a particular user'''
     def get(self,username):
-        data=None
+        book = None
         try:
-            data = self.db.books.find_one({"user":username},{'_id':False})
+            book = session.query(SprintBook).filter_by(name=username).one()
         except :
             exc = "error : connection unsucessfull"
-            print exc
             return exc
-        return data
+        return book
 
-    def put(self,username):
-        msg=request.form['data']
-        print msg
-        return {'user':username}
+    def put(self,username,bookname,description):
+        book = session.query(SprintBook).filter_by(name = username).one()
+        if not bookname:
+           book.user = username
+        if not username:
+           book.name = bookname
+        if not description:
+           book.description = description
+        session.add(SprintBook)
+        session.commit()
+        return "Updated a SprintBook: %s" % bookname
