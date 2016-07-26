@@ -1,4 +1,3 @@
-from flask import request
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from utils.models import Base, SprintBook 
