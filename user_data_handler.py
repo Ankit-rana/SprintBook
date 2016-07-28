@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base, SprintBook 
+from flask import jsonify
 
 engine = create_engine('sqlite:///sprintbooks.db')
 Base.metadata.bind = engine
@@ -14,9 +15,9 @@ class UserDataHandler():
     def get(self,username):
         book = None
         try:
-            book = session.query(SprintBook).filter_by(name=username).one()
-        except Exception as e:
-            return e
+            book = session.query(SprintBook).filter_by(user=username).one()
+        except Exception as exc:
+            return exc
         return jsonify(Book=book.serialize)
     def put(self,username,bookname,description):
         book = SprintBook(user=username,name=bookname,description=description)

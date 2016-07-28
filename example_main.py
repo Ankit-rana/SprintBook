@@ -8,7 +8,7 @@ app = Flask(__name__)
 def welcome_book():
    return "Welcome to Sprint book"
 
-@app.route('/book/<user>',methods = ['GET','POST'])
+@app.route('/user/<user>',methods = ['GET','POST'])
 def book_interface(user):
    print user
    handler = UserDataHandler()

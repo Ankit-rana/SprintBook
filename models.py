@@ -18,7 +18,7 @@ class SprintBook(Base):
    user = Column(String(21))
    description = Column(String(80))
    @property
-   def serialize():
+   def serialize(self):
       return {
          'user' : self.user, 
          'bookname' : self.name,
