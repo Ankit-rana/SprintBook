@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from utils.models import Base, SprintBook 
+from models import Base, SprintBook 
 
-engine = create_engine('sqlite:///puppies.db')
+engine = create_engine('sqlite:///sprintbooks.db')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -15,19 +15,11 @@ class UserDataHandler():
         book = None
         try:
             book = session.query(SprintBook).filter_by(name=username).one()
-        except :
-            exc = "error : connection unsucessfull"
-            return exc
-        return book
-
+        except Exception as e:
+            return e
+        return jsonify(Book=book.serialize)
     def put(self,username,bookname,description):
-        book = session.query(SprintBook).filter_by(name = username).one()
-        if not bookname:
-           book.user = username
-        if not username:
-           book.name = bookname
-        if not description:
-           book.description = description
-        session.add(SprintBook)
+        book = SprintBook(user=username,name=bookname,description=description)
+        session.add(book)
         session.commit()
         return "Updated a SprintBook: %s" % bookname
