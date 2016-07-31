@@ -19,6 +19,7 @@ class UserDataHandler():
         except Exception as exc:
             return exc
         return jsonify(Book=book.serialize)
+
     def put(self,username,bookname,description):
         book = SprintBook(user=username,name=bookname,description=description)
         session.add(book)
